@@ -1,8 +1,5 @@
 """
 Md Islam
-gh3105
-CSC4992/Python
-Assignment 3
 
 This programs creates a GUI based "Word Scramble" game.
 It picks a random word from the list, scrambles it, and
