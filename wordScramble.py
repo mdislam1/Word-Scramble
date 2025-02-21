@@ -1,136 +1,114 @@
 """
-Md Islam
-
-This programs creates a GUI based "Word Scramble" game.
-It picks a random word from the list, scrambles it, and
-shows it to the user. The user gets three chances to
-guess and option to continue playing after each round.
-It also gives the user points based on the length of the
-word times 10 per correct guess.
-
+This program creates a GUI-based "Word Scramble" game.  
+It selects a random word from a predefined list, scrambles it, and displays it to the user.  
+The user has three attempts to guess the correct word. Points are awarded based on the word's length, multiplied by 10, for each correct guess.  
+After each round, the user can choose to continue playing or exit the game.  
 """
+
 # Using EasyFrame for the GUI
 from breezypythongui import EasyFrame
-# random library to scramble and pick a random word
 import random
 
 
 class WordScrambleGame(EasyFrame):
-	# Initializer
-	def __init__(self):
-		# Title and the background color
-		EasyFrame.__init__(self, title="Word Scramble Game", background="blue")
+    # Initializer
+    def __init__(self):
+        EasyFrame.__init__(self, title="Word Scramble Game", background="blue")
 
-		# Start button to start the game
-		self.button = self.addButton(text="Start", row=0, column=0, columnspan=2, command=self.readAndScramble)
+        # Start button to start the game
+        self.button = self.addButton(text="Start", row=0, column=0, columnspan=2, command=self.startGame)
 
-		# Shows the scrambled word to the user
-		self.addLabel(text="Scramble Word", row=1, column=0, background="orange")
-		self.scrambleWord = self.addTextField(text="", row=1, column=1, state="readonly")
+        # Shows the scrambled word to the user
+        self.addLabel(text="Scrambled Word", row=1, column=0, background="orange")
+        self.scrambleWord = self.addTextField(text="", row=1, column=1, state="readonly")
 
-		# Takes the user guess to check if it's correct or not
-		self.addLabel(text="Your Guess", row=2, column=0, background="orange")
-		self.userGuess = self.addTextField(text="", row=2, column=1)
+        # Takes the user's guess
+        self.addLabel(text="Your Guess", row=2, column=0, background="orange")
+        self.userGuess = self.addTextField(text="", row=2, column=1)
 
-		# Button to check if the guesses are are correct or not
-		self.button = self.addButton(text="Check", row=3, column=0, columnspan=2, command=self.game)
+        # Button to check if the guess is correct
+        self.checkButton = self.addButton(text="Check", row=3, column=0, columnspan=2, command=self.checkGuess)
 
-		# Display message after each guess and round
-		self.addLabel(text="Message", row=4, column=0, background="orange")
-		self.feedback = self.addTextField(text="", row=4, column=1, state="readonly")
+        # Display message after each guess
+        self.addLabel(text="Message", row=4, column=0, background="orange")
+        self.feedback = self.addTextField(text="", row=4, column=1, state="readonly")
 
-		# Display the original word, after each round, if the three guesses were incorrect
-		self.addLabel(text="Original Word", row=5, column=0, background="orange")
-		self.originalWord = self.addTextField(text="", row=5, column=1, state="readonly")
+        # Display the original word after three incorrect guesses
+        self.addLabel(text="Original Word", row=5, column=0, background="orange")
+        self.originalWord = self.addTextField(text="", row=5, column=1, state="readonly")
 
-		# Display how many chances are left out of three
-		self.addLabel(text="Chances left", row=6, column=0, background="orange")
-		self.chanceLeft = self.addIntegerField(value=3, row=6, column=1)
+        # Display remaining chances
+        self.addLabel(text="Chances Left", row=6, column=0, background="orange")
+        self.chanceLeft = self.addIntegerField(value=3, row=6, column=1)
 
-		# Display the total score after each round
-		self.addLabel(text="Total Score", row=7, column=0, background="orange")
-		self.totalScore = self.addIntegerField(value=0, row=7, column=1)
+        # Display total score
+        self.addLabel(text="Total Score", row=7, column=0, background="orange")
+        self.totalScore = self.addIntegerField(value=0, row=7, column=1)
 
-		# Offer the user option to continue playing
-		self.addLabel(text="Do you want to continue(Y/N)", row=8, column=0, background="orange")
-		self.continuation = self.addTextField(text="", row=8, column=1)
+        # Offer the option to continue playing
+        self.addLabel(text="Continue (Y/N)", row=8, column=0, background="orange")
+        self.continuation = self.addTextField(text="", row=8, column=1)
 
-		# Button to keep playing
-		self.button = self.addButton(text="Continue", row=9, column=0, columnspan=2, command=self.keepOnPlaying)
+        # Button to continue playing
+        self.continueButton = self.addButton(text="Continue", row=9, column=0, columnspan=2, command=self.keepOnPlaying)
 
-	#  Reads the words from the text file and scrambles it
-	def readAndScramble(self):
-		# Reading words from text file
-		textInput = []
-		infile = open("words.txt", "r")
-		for line in infile:
-			textInput = line.split(",")
+        # Initialize game variables
+        self.word = ""
+        self.scrambled = ""
+        self.chances = 3
+        self.totalPoints = 0
 
-		# choosing a random word to scramble
-		word = random.choice(textInput)
+    # Reads words from a file and scrambles a randomly selected word
+    def readAndScramble(self):
+        try:
+            with open("words.txt", "r") as infile:
+                words = infile.read().strip().split(",")
 
-		""" 
-		This portion of the code was given by 
-		course instructor, Seyed Ziae Mousavi Mojab.
-		"""
-		word_list = list(word)
-		random.shuffle(word_list)
-		scrambled = ''.join(word_list)
-		self.scrambleWord.setText(scrambled)
-		return word
+            word = random.choice(words).strip()
+            scrambled = "".join(random.sample(word, len(word)))
+            return word, scrambled
+        except FileNotFoundError:
+            self.feedback.setText("Error: words.txt not found.")
+            return "", ""
 
-	def game(self):
-		# Random word from the function readAndScramble()
-		correctWord = self.readAndScramble()
+    # Start a new game round
+    def startGame(self):
+        self.word, self.scrambled = self.readAndScramble()
+        if self.word:
+            self.scrambleWord.setText(self.scrambled)
+            self.originalWord.setText("")
+            self.feedback.setText("")
+            self.chanceLeft.setNumber(3)
+            self.chances = 3
+        else:
+            self.scrambleWord.setText("")
 
-		# User guess
-		guess = self.userGuess.getText()
+    # Check the user's guess
+    def checkGuess(self):
+        guess = self.userGuess.getText().strip()
 
-		totalPoint = 0
-		chance = 3
-		rightMessage = "Congratulation, you won!"
-		wrongMessage = "Sorry, you didn’t win"
-		text = "Wrong! Try Again"
+        if guess == self.word:
+            self.feedback.setText("Congratulations, you won!")
+            self.totalPoints += len(self.word) * 10
+            self.totalScore.setNumber(self.totalPoints)
+            self.originalWord.setText(self.word)
+        else:
+            self.chances -= 1
+            self.chanceLeft.setNumber(self.chances)
+            if self.chances > 0:
+                self.feedback.setText("Wrong! Try Again")
+            else:
+                self.feedback.setText("Sorry, you didn't win")
+                self.originalWord.setText(self.word)
 
-		"""
-		Checing if the user guess is correct and 
-		displaying message and earned points 
-		"""
-		if guess == correctWord:
-			self.feedback.setText(rightMessage)
-			totalPoint = len(correctWord) * 10
-			self.totalScore.setNumber(totalPoint)
-		else:
-			"""
-			Giving three chances to the user to make 
-			a correct guess and displaying a interactive
-			message after each user guess. 
-			"""
-			while chance != 1:
-				chance -= 1
-				self.chanceLeft.setNumber(chance)
-				self.feedback.setText(text)
-				guess = self.userGuess.getText()
-
-		"""
-		Displaying the error message, earned points,
-		and the original word after each round. 
-		"""
-		self.feedback.setText(wrongMessage)
-		self.totalScore.setNumber(totalPoint)
-		self.originalWord.setText(correctWord)
-
-	# Option to continue playing or exit
-	def keepOnPlaying(self):
-		confirmation = self.continuation.getText()
-		if confirmation == "Y":
-			self.game()
-		else:
-			exit()
+    # Option to continue playing or exit
+    def keepOnPlaying(self):
+        confirmation = self.continuation.getText().strip().upper()
+        if confirmation == "Y":
+            self.startGame()
+        else:
+            self.quit()
 
 
+# Run the game
 WordScrambleGame().mainloop()
-
-
-
-
