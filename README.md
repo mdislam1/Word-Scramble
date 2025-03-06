@@ -65,7 +65,7 @@ The **Word Scramble Game** is a GUI-based application built using the `breezypyt
 ## Example `words.txt` File
 
 The `words.txt` file should contain a list of words separated by commas. For example:
-apple,banana,cherry,date,elderberry,fig,grape,honeydew,kiwi,lemon
+`apple, banana, cherry, date, elderberry, fig,grape, honeydew, kiwi, lemon`
 
 ## License
 
