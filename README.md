@@ -2,7 +2,7 @@
 
 ## Overview
 
-The **Word Scramble Game** is a GUI-based application built using the `breezypythongui` library. The game selects a random word from a predefined list, scrambles it, and presents it to the user. The user has three attempts to guess the correct word. Points are awarded based on the length of the word, multiplied by 10, for each correct guess. After each round, the user can choose to continue playing or exit the game.
+The **Word Scramble Game** is a GUI-based application built using the [`breezypythongui`](https://lambertk.academic.wlu.edu/breezypythongui/) library. The game selects a random word from a predefined list, scrambles it, and presents it to the user. The user has three attempts to guess the correct word. Points are awarded based on the length of the word, multiplied by 10, for each correct guess. After each round, the user can choose to continue playing or exit the game.
 
 ## Features
 
@@ -17,7 +17,7 @@ The **Word Scramble Game** is a GUI-based application built using the `breezypyt
 ## Requirements
 
 - Python 3.x
-- `breezypythongui` library
+- [`breezypythongui`](https://lambertk.academic.wlu.edu/breezypythongui/) library
 
 ## Installation
 
@@ -65,7 +65,11 @@ The **Word Scramble Game** is a GUI-based application built using the `breezypyt
 ## Example `words.txt` File
 
 The `words.txt` file should contain a list of words separated by commas. For example:
-`apple, banana, cherry, date, elderberry, fig,grape, honeydew, kiwi, lemon`
+`apple,banana,cherry,date,elderberry,fig,grape,honeydew,kiwi,lemon`
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a pull request or open an issue if you have any suggestions or improvements.
 
 ## License
 
@@ -73,7 +77,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Acknowledgments
 
-- Thanks to the creators of the `breezypythongui` library for making GUI development in Python more accessible.
+- Thanks to the creators of the [`breezypythongui`](https://lambertk.academic.wlu.edu/breezypythongui/) library for making GUI development in Python more accessible.
 - Special thanks to all contributors and users of the game.
 
 ## Contact
